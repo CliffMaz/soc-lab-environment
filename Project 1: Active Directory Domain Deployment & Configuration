@@ -1,0 +1,21 @@
+🛡️ Project 1: Active Directory Domain Deployment & Configuration
+📌 Overview
+Designed and deployed a Windows Active Directory lab environment to simulate a corporate network infrastructure.
+🏗️ Environment
+• Windows Server (Domain Controller)
+• Windows 10 Client
+• Internal Virtual Network (SOC_LAN)
+• DNS configured on DC
+⚙️ Key Tasks
+• Installed Active Directory Domain Services (AD DS)
+• Promoted server to Domain Controller
+• Configured DNS for domain resolution
+• Created domain users
+• Joined Windows client to domain
+• Verified forward and reverse DNS resolution
+🐛 Challenges & Fixes
+Issue: Client unable to access internet after DNS changes
+Root Cause: Reverse DNS and DNS configuration mismatch
+Fix: Corrected DNS settings to point to DC and ensured proper name resolution order
+🎯 Outcome
+Successfully created a functioning domain environment to support SOC monitoring and log collection.
