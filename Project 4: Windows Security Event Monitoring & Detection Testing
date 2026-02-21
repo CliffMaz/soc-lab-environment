@@ -1,0 +1,15 @@
+🔍 Project 4: Windows Security Event Monitoring & Detection Testing
+📌 Overview
+Simulated authentication activity to validate SIEM detection capability.
+⚙️ Key Tasks
+• Generated failed login attempts (Event ID 4625)
+• Verified event presence in Event Viewer
+• Confirmed ingestion into Splunk
+• Queried logs using:
+index=wineventlog EventCode=4625 
+🐛 Challenges & Fixes
+Issue: Event Viewer “Access Denied” error
+Root Cause: Insufficient permissions for domain user
+Fix: Opened Event Viewer as Administrator / adjusted group membership
+🎯 Outcome
+Validated end-to-end log pipeline from endpoint → forwarder → SIEM.
