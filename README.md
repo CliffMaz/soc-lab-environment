@@ -31,3 +31,5 @@ Designed and deployed a Windows Active Directory lab environment to simulate a c
 • Deployed Siem tool(Splunk Enterprise)
 🐛 Challenges & Fixes
 Successfully created a functioning domain environment to support SOC monitoring and log collection.
+
+<img width="1536" height="1024" alt="bc285d80-0784-48ac-9a53-270ddc74f5ae" src="https://github.com/user-attachments/assets/765fb069-b449-4eda-9703-e3d500e11370" />
