@@ -1,0 +1,95 @@
+🛠️ Issue: Windows Event Logs Not Appearing in Splunk
+📌 Project Context
+
+Environment:
+
+Windows Server (Splunk Enterprise)
+
+Windows Client (Domain Joined)
+
+Splunk Universal Forwarder
+
+Custom index: wineventlog
+
+Port 9997 configured and active
+
+🚨 Problem
+
+Windows Security Event Logs were not appearing in Splunk Enterprise, even though:
+
+Splunk Universal Forwarder service was running
+
+splunk list forward-server showed Active
+
+_internal logs from the client were visible
+
+Security events were present in Event Viewer
+
+Search query returned no results:
+
+index=wineventlog host=<clienthostname>
+🔍 Investigation Steps
+
+Verified forwarder service status (services.msc)
+
+Confirmed active connection using:
+
+splunk list forward-server
+
+Verified receiving port 9997 on Splunk Enterprise
+
+Confirmed _internal logs were being received
+
+Checked inputs.conf configuration
+
+Ran:
+
+splunk list inputstatus
+
+No WinEventLog inputs were listed.
+
+🎯 Root Cause
+
+The configuration file was incorrectly saved as:
+
+inputs.conf.txt
+
+Due to Windows hiding file extensions.
+
+Splunk only loads files ending strictly in:
+
+.conf
+
+As a result, the Universal Forwarder did not load the WinEventLog input configuration.
+
+✅ Resolution
+
+Enabled "File name extensions" in Windows Explorer.
+
+Renamed file from:
+
+inputs.conf.txt
+
+to:
+
+inputs.conf
+
+Restarted Splunk Universal Forwarder:
+
+splunk restart
+
+Verified WinEventLog inputs were loaded:
+
+splunk list inputstatus
+
+Confirmed logs successfully appeared in Splunk Enterprise.
+
+🧠 Lessons Learned
+
+Always verify file extensions on Windows systems.
+
+Use splunk list inputstatus to confirm inputs are loading.
+
+_internal logs can confirm connectivity even if data inputs fail.
+
+Structured troubleshooting prevents unnecessary configuration changes.
