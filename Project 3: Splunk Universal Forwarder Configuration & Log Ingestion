@@ -1,0 +1,24 @@
+🔄 Project 3: Splunk Universal Forwarder Configuration & Log Ingestion
+📌 Overview
+Configured Splunk Universal Forwarder on Windows client to send Security logs to Splunk Enterprise.
+⚙️ Key Tasks
+• Installed Universal Forwarder
+• Configured outputs.conf to forward to SIEM
+• Configured inputs.conf to collect:
+• Security logs
+• System logs
+• Application logs
+• Restarted forwarder service
+🐛 Challenges & Fixes
+Issue 1: Forwarder Not Sending Logs
+Root Cause: SplunkForwarder service was not running
+Fix: Started service and verified active connection using:
+splunk list forward-server 
+Issue 2: Security Log Access Denied
+Root Cause: Domain user lacked permission to read Security logs
+Fix: Added user to Event Log Readers group
+Issue 3: Logs Dropped
+Root Cause: Target index not created on Splunk Enterprise
+Fix: Created wineventlog index
+🎯 Outcome
+Successfully forwarded Windows Security Event logs (including Event ID 4624 & 4625) to SIEM.
