@@ -1,0 +1,154 @@
+🛠️ Issue: Domain Client Date Reverting After Time Resync (VirtualBox AD Lab)
+📌 Project Context
+
+Lab Environment
+
+Hypervisor: VirtualBox
+
+Domain Controller: Windows Server 2022
+
+Client Machine: Windows 11 (Domain Joined)
+
+Directory Services: Active Directory
+
+Time Synchronization: Domain Hierarchy (NT5DS)
+
+🚨 Problem Statement
+
+The domain-joined Windows client’s date was incorrect (1 day ahead).
+
+Despite:
+
+Domain Controller time being correct
+
+w32tm /query /source showing the Domain Controller
+
+w32tm /resync completing successfully
+
+Windows Time service running properly
+
+After manually correcting the date and running:
+
+w32tm /resync
+
+The client’s date reverted back to:
+
+26/02/2026
+🔍 Investigation & Troubleshooting Steps
+1️⃣ Verified Domain Controller Time
+
+On the Domain Controller:
+
+date
+time
+w32tm /query /status
+w32tm /query /source
+
+Result:
+
+DC time was correct
+
+Source was properly configured
+
+No external NTP misconfiguration detected
+
+2️⃣ Verified Client Time Source
+
+On the client:
+
+w32tm /query /source
+
+Result:
+
+Source = Domain Controller
+
+Domain hierarchy functioning correctly
+
+3️⃣ Forced Time Service Restart
+
+On the client:
+
+net stop w32time
+net start w32time
+w32tm /resync
+
+Result:
+
+Command successful
+
+Time still reverted incorrectly
+
+4️⃣ Manually Set Date
+
+Corrected date manually via Control Panel.
+
+After running:
+
+w32tm /resync
+
+The date reverted again to 26/02/2026.
+
+This confirmed the issue was external to Windows Time Service configuration.
+
+🎯 Root Cause
+
+VirtualBox Guest Additions was synchronizing the VM’s system clock with the host machine time.
+
+The host machine date was set to:
+
+26/02/2026
+
+VirtualBox periodically injected host time into the VM, overriding:
+
+Active Directory time hierarchy
+
+Domain Controller synchronization
+
+Manual time corrections
+
+As a result:
+
+Client time reverted after every resync
+
+Domain time authority was being overridden by the hypervisor
+
+✅ Resolution
+1️⃣ Disabled Host Time Synchronization in VirtualBox
+
+On the host machine, executed:
+
+VBoxManage setextradata "Client_VM_Name" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled" 1
+
+(Repeated for Domain Controller VM as well.)
+
+2️⃣ Restarted Virtual Machines
+
+Powered off VMs completely
+
+Restarted Domain Controller first
+
+Then restarted Client machine
+
+3️⃣ Forced Domain Time Resync
+
+On the client:
+
+w32tm /resync
+
+Result:
+
+Client time synchronized correctly
+
+No further reversion occurred
+
+🧠 Lessons Learned
+
+Hypervisor time synchronization can override Active Directory time hierarchy.
+
+In domain environments, the Domain Controller must be the authoritative time source.
+
+VirtualBox Guest Additions may silently inject host time.
+
+Always verify hypervisor-level settings when troubleshooting time issues.
+
+Successful w32tm /resync does not guarantee correct time authority if an external override exists.
